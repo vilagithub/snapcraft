@@ -18,7 +18,7 @@ from snapcraft import config
 from snapcraft.tests import store_tests
 
 
-class TestLoginLogout(store_tests.TestCase):
+class TestLoginLogout(store_tests.TestStore):
 
     def test_successful_login(self):
         self.addCleanup(self.logout)

@@ -23,7 +23,7 @@ from snapcraft.storeapi import _upload
 from snapcraft.tests import store_tests
 
 
-class TestUploadNoLogin(store_tests.TestCase):
+class TestUploadNoLogin(store_tests.TestStore):
 
     def test_upload_without_credentials(self):
         snap_path, snap_name = self.create_snap('notevenregistered')
@@ -32,7 +32,7 @@ class TestUploadNoLogin(store_tests.TestCase):
                           self.upload, snap_path, snap_name)
 
 
-class UploadTestCase(store_tests.TestCase):
+class TestUpload(store_tests.TestStore):
 
     def setUp(self):
         super().setUp()
@@ -138,7 +138,7 @@ class FakeSession(object):
         raise self.exc()
 
 
-class ScanStatusTestCase(unittest.TestCase):
+class TestScanStatus(unittest.TestCase):
 
     def test_is_scan_complete_for_none(self):
         self.assertFalse(_upload.is_scan_completed(None))

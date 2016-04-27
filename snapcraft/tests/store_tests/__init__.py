@@ -66,7 +66,8 @@ class TestCase(testtools.TestCase):
 
     def setUp(self):
         super().setUp()
-        # FIXME: Urgh isolation! -- vila 2016-04-12
+        # Allow snapcraft to be run from sources
+        self.addCleanup(common.set_schemadir, common.get_schemadir())
         common.set_schemadir(os.path.join(snapcraft.__file__,
                              '..', '..', 'schema'))
         # Where the snap templates are
@@ -90,6 +91,11 @@ class TestCase(testtools.TestCase):
         # INFO from the requests lib is too noisy
         logging.getLogger("requests").setLevel(logging.WARNING)
 
+
+class TestStore(TestCase):
+
+    def setUp(self):
+        super().setUp()
         self.store = storeapi.SCAClient()
         self.addCleanup(self.store.close)
 

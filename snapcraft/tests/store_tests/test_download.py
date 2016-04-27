@@ -22,14 +22,14 @@ from snapcraft import (
 from snapcraft.tests import store_tests
 
 
-class TestDownloadLogin(store_tests.TestCase):
+class TestDownloadLogin(store_tests.TestStore):
 
     def test_download_without_credentials(self):
         self.assertRaises(storeapi.InvalidCredentials,
                           self.download, 'basic')
 
 
-class TestSearchPackage(store_tests.TestCase):
+class TestSearchPackage(store_tests.TestStore):
 
     def setUp(self):
         super().setUp()
@@ -49,7 +49,7 @@ class TestSearchPackage(store_tests.TestCase):
                                                   'amd64'))
 
 
-class TestDownload(store_tests.TestCase):
+class TestDownload(store_tests.TestStore):
 
     def setUp(self):
         super().setUp()

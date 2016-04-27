@@ -19,7 +19,7 @@ import uuid
 from snapcraft.tests import store_tests
 
 
-class RegisterTestCase(store_tests.TestCase):
+class TestRegister(store_tests.TestStore):
 
     def setUp(self):
         super().setUp()
