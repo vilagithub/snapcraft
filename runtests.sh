@@ -75,6 +75,7 @@ run_integration(){
     if which python3-coverage >/dev/null 2>&1; then
         python3 -m coverage erase
         export SNAPCRAFT=snapcraft-coverage
+        python3 -m coverage run --branch --source snapcraft -m unittest discover -b -v -s snapcraft -t .
     fi
 
     python3 -m unittest discover -b -v -s integration_tests
