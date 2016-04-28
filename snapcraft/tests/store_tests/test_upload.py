@@ -129,6 +129,13 @@ class UploadTestCase(store_tests.TestCase):
                       self.logger.output)
 
 
+class TestExceptions(unittest.TestCase):
+
+    def test_mismatcherror(self):
+        self.assertEqual('SHA512 checksum for path is not sha.',
+                         str(storeapi.SHAMismatchError('path', 'sha')))
+
+
 class FakeSession(object):
 
     def __init__(self, exc):
@@ -142,6 +149,11 @@ class ScanStatusTestCase(unittest.TestCase):
 
     def test_is_scan_complete_for_none(self):
         self.assertFalse(_upload.is_scan_completed(None))
+
+    def test_is_scan_complete_for_response_not_ok(self):
+        class Response(object):
+            ok = False
+        self.assertFalse(_upload.is_scan_completed(Response()))
 
     def get_scan_status(self, exc):
         raiser = FakeSession(exc)
