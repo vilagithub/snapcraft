@@ -82,11 +82,6 @@ run_integration(){
 }
 
 run_examples(){
-    if which python3-coverage >/dev/null 2>&1; then
-        python3 -m coverage erase
-        export SNAPCRAFT=snapcraft-coverage
-    fi
-
     python3 -m examples_tests "$@"
 }
 
