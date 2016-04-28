@@ -218,30 +218,6 @@ def get_scan_status(session, url):
         return None
 
 
-def is_scan_completed(response):
-    """Return True if the response indicates the scan process completed."""
-    if response is None:
-        # To cope with spurious connection failures lacking a proper response:
-        # either we'll retry and succeed or we fail for all retries and report
-        # an error.
-        return False
-    if response.ok:
-        return response.json().get('completed', False)
-    return False
-
-
-def get_scan_status(session, url):
-    try:
-        resp = session.get(url)
-        return resp
-    except (requests.ConnectionError, requests.HTTPError):
-        # Something went wrong and we couldn't acquire the status. Upper
-        # level (is_scan_completed) will deal with the None response
-        # meaning we don't know the status. This avoid a spurious
-        # connection error breaking an upload for a wrong reason.
-        return None
-
-
 def get_scan_data(session, status_url):
     """Return metadata about the state of the upload scan process."""
     # initial retry after 5 seconds
