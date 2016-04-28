@@ -101,6 +101,8 @@ class TestCase(testtools.TestCase):
         process.expect_exact('Authenticating against Ubuntu One SSO.')
         result = 'successful' if expect_success else 'failed'
         process.expect_exact('Login {}.'.format(result))
+        process.expect(pexpect.EOF)
+        process.close()
 
     def logout(self):
         output = self.run_snapcraft('logout')
