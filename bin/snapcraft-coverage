@@ -37,7 +37,6 @@ if __name__ == '__main__':
     try:
         snapcraft.internal.dirs.setup_dirs()
         snapcraft.main.main()
-    except:
+    finally:
         cov.stop()
         cov.save()
-        raise
