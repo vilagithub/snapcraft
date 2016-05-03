@@ -14,9 +14,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import contextlib
+import io
 import os
+import time
 import unittest
 
+import progressbar
 import requests
 import testscenarios
 
@@ -291,3 +294,32 @@ class TestUpload_store(store_tests.TestCase):
                       'Reason: Some\n'
                       'Text: Full Moon',
                       self.logger.output)
+
+
+class TestProgressbar(unittest.TestCase):
+
+    def test_animated_with_time_sensitive(self):
+        out = io.StringIO()
+        # AnimatedMarker displays a new char from '|/-\' at every update (if
+        # enough time passed)
+        anim = progressbar.AnimatedMarker()
+        anim.TIME_SENSITIVE = True
+        pbar = progressbar.ProgressBar(widgets=[anim],
+                                       term_width=1,  # avoid TIOCGWINSZ code
+                                       fd=out)
+        # Force updates to trigger faster than the default
+        pbar.update_interval = 0.1
+        pbar.poll = 0.05
+        pbar.start()
+        # Start includes a call to update so we get a first char
+        self.assertEqual('|\r', out.getvalue())
+        # Wait enough for the next update to display a new char
+        time.sleep(0.1)
+        pbar.update()
+        self.assertEqual('|\r/\r', out.getvalue())
+        time.sleep(0.1)
+        pbar.update()
+        self.assertEqual('|\r/\r-\r', out.getvalue())
+        # Finish emits '|'
+        pbar.finish()
+        self.assertEqual('|\r/\r-\r|\r\n', out.getvalue())

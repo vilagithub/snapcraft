@@ -137,8 +137,10 @@ def _upload_files(store, name, data, result):
 
         # This is just a waiting game, so we'll show an indeterminate
         # AnimatedMarker for it.
+        anim = AnimatedMarker()
+        anim.TIME_SENSITIVE = True
         progress_indicator = ProgressBar(
-            widgets=['Checking package status... ', AnimatedMarker()],
+            widgets=['Checking package status... ', anim],
             maxval=7)
         progress_indicator.start()
 
@@ -146,22 +148,10 @@ def _upload_files(store, name, data, result):
         # progress indicator.
         with ThreadPoolExecutor(max_workers=1) as executor:
             future = executor.submit(get_scan_data, store.session, status_url)
-
-            count = 0
             while not future.done():
-                # Annoyingly, there doesn't seem to be a way to actually
-                # make a progress indicator that will go on forever, so we
-                # need to restart this one each time we reach the end of
-                # its animation.
-                if count >= 7:
-                    progress_indicator.start()
-                    count = 0
-
-                # Actually update the progress indicator
-                progress_indicator.update(count)
-                count += 1
                 time.sleep(0.15)
-
+                # Actually update the progress indicator
+                progress_indicator.update()
             # Grab the results from the package scan
             completed, data = future.result()
 
